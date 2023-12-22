@@ -1,0 +1,55 @@
+From 91039ec8e866ac870e237d265dd993c05c8e22e0 Mon Sep 17 00:00:00 2001
+From: Karol Herbst <kherbst@redhat.com>
+Subject: [PATCH] gallium: fix linkink with libgalliumvl
+
+Upstream-Status: Pending [https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/26680]
+
+diff --git a/src/gallium/drivers/d3d12/meson.build b/src/gallium/drivers/d3d12/meson.build
+index a2ed8b3981d..f73fc11de58 100644
+--- a/src/gallium/drivers/d3d12/meson.build
++++ b/src/gallium/drivers/d3d12/meson.build
+@@ -135,5 +135,5 @@ libd3d12 = static_library(
+ 
+ driver_d3d12 = declare_dependency(
+   compile_args : '-DGALLIUM_D3D12',
+-  link_with : [libd3d12, libgalliumvl],
++  link_with : [libd3d12],
+ )
+diff --git a/src/gallium/drivers/r600/meson.build b/src/gallium/drivers/r600/meson.build
+index 023719a3a16..974b59d4594 100644
+--- a/src/gallium/drivers/r600/meson.build
++++ b/src/gallium/drivers/r600/meson.build
+@@ -185,7 +185,6 @@ libr600 = static_library(
+     inc_src, inc_mapi, inc_mesa, inc_include, inc_gallium, inc_gallium_aux, inc_amd_common,
+     inc_gallium_drivers,
+   ],
+-  link_with : [ libgalliumvl ],
+   dependencies: [dep_libdrm_radeon, dep_elf, dep_llvm, idep_nir, idep_nir_headers],
+ )
+ 
+diff --git a/src/gallium/drivers/radeonsi/meson.build b/src/gallium/drivers/radeonsi/meson.build
+index 29afa87c0b6..c89c417b02c 100644
+--- a/src/gallium/drivers/radeonsi/meson.build
++++ b/src/gallium/drivers/radeonsi/meson.build
+@@ -168,7 +168,7 @@ libradeonsi = static_library(
+ driver_radeonsi = declare_dependency(
+   compile_args : '-DGALLIUM_RADEONSI',
+   link_with : radeonsi_gfx_libs + [
+-    libradeonsi, libradeonwinsys, libamdgpuwinsys, libamd_common, libamd_common_llvm, libgalliumvl
++    libradeonsi, libradeonwinsys, libamdgpuwinsys, libamd_common, libamd_common_llvm
+   ],
+   dependencies : idep_nir,
+ )
+diff --git a/src/gallium/targets/rusticl/meson.build b/src/gallium/targets/rusticl/meson.build
+index b2963fe6dfa..e1acaca7e68 100644
+--- a/src/gallium/targets/rusticl/meson.build
++++ b/src/gallium/targets/rusticl/meson.build
+@@ -42,6 +42,7 @@ librusticl = shared_library(
+   ],
+   link_whole : librusticl,
+   link_with : [
++    libgalliumvl_stub,
+     libpipe_loader_static,
+     libswdri,
+     libswkmsdri,
+
